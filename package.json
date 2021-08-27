@@ -1,5 +1,5 @@
 {
-	"name": "@dekode/project-base",
+	"name": "@dekode/dekode-plugin-ninjaforms-azure",
 	"private": true,
 	"engines": {
 		"node": "14",
@@ -7,37 +7,12 @@
 		"yarn": "Please use npm"
 	},
 	"dependencies": {
-		"@teft/buttons": "^1.0.0",
-		"@teft/reset": "0.0.6",
-		"@teft/typography": "0.0.5",
-		"@teft/utilities": "0.0.5",
-		"@teft/wordpress": "^0.4.0"
+
 	},
 	"devDependencies": {
-		"@dekode/eslint-plugin": "0.0.1",
-		"@dekode/stylelint-config": "1.0.1",
-		"@wordpress/scripts": "18.0.0",
-		"autoprefixer": "10.3.2",
-		"browser-sync": "^2.27.5",
-		"browser-sync-webpack-plugin": "^2.3.0",
-		"cssnano": "5.0.8",
-		"dotenv": "^10.0.0",
-		"fast-glob": "3.2.7",
-		"ignore-emit-webpack-plugin": "2.0.6",
-		"postcss": "8.3.6",
-		"postcss-custom-media": "8.0.0",
-		"postcss-flexbugs-fixes": "5.0.2",
-		"postcss-import": "14.0.2",
-		"postcss-media-minmax": "5.0.0",
-		"postcss-mixins": "8.1.0",
-		"postcss-nested": "5.0.6"
+
 	},
 	"scripts": {
-		"start": "wp-scripts start",
-		"build": "wp-scripts build",
-		"check-engines": "wp-scripts check-engines",
-		"lint": "npm run lint:js && npm run lint:css",
-		"lint:css": "wp-scripts lint-style",
-		"lint:js": "wp-scripts lint-js"
+
 	}
 }
