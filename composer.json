@@ -18,11 +18,13 @@
 	},
 	"require": {
 		"php": ">=7.2",
-		"composer/installers": "~1.11.0"
+		"composer/installers": "~1.11.0",
+		"microsoft/azure-storage-file": "~1.2.4",
+		"microsoft/azure-storage-blob": "~1.5.2",
+		"guzzlehttp/psr7": "~1.8"
 	},
 	"require-dev": {
-		"dekode/coding-standards": "4.0.0",
-		"dekode/logging": "@dev"
+		"dekode/coding-standards": "4.0.0"
 	},
 	"scripts": {
 		"post-install-cmd": [
