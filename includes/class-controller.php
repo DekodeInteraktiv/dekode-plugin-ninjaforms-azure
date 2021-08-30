@@ -1,4 +1,9 @@
 <?php
+/**
+ * Controller to process all requests to work with Azure Storage
+ *
+ * @package dekode
+ */
 
 declare( strict_types=1 );
 
@@ -6,174 +11,209 @@ namespace Dekode\NinjaForms\Azure;
 
 use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
-use MicrosoftAzure\Storage\Blob\Models\CopyBlobOptions;
 use MicrosoftAzure\Storage\Blob\Models\CreateBlockBlobOptions;
 use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
 use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
 
 /**
+ * Controller to process all requests to work with Azure Storage
  *
  * @package Dekode\NinjaForms\Azure
  */
-class Controller
-{
-    static $instance = null;
-    static $blobClient = false;
+class Controller {
+	/**
+	 * Singleton variable
+	 *
+	 * @var self
+	 */
+	public static $instance = null;
 
-    public function errorLog($message)
-    {
-        if(defined('WP_DEBUG') && WP_DEBUG) {
-            error_log($message);
-        }
-    }
-    protected function getContainerName()
-    {
-        $parse = parse_url(get_site_url());
-        $domain = $parse['host'];
+	/**
+	 * Official library API class instance
+	 *
+	 * @var false
+	 */
+	private static $blob_client = false;
 
-        // Naming conventions, only letters
-        // Container names must start or end with a letter or number, and can contain only letters, numbers, and the dash (-) character.
-        // https://docs.microsoft.com/en-us/rest/api/storageservices/naming-and-referencing-containers--blobs--and-metadata
-        $containerName = strtolower(preg_replace("/[^a-zA-Z0-9-]/", "-", $domain));
+	/**
+	 * Logs messages to file for debugging
+	 *
+	 * @param string $message Text message to log.
+	 * @return void
+	 */
+	public function error_log( string $message ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			\error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		}
+	}
 
-        return $containerName;
-    }
+	/**
+	 * Generates container name using site url,
+	 * it leaves only allowed characters.
+	 *
+	 * @return string
+	 */
+	protected function get_container_name(): string {
+		$parse  = \wp_parse_url( get_site_url() );
+		$domain = $parse['host'];
 
-    protected function getBlobClient()
-    {
-        if(self::$blobClient === false) {
-              $blobClient = BlobRestProxy::createBlobService(DEKODE_NINJAFORMS_AZURE_CONNECTION_STRING);
+		// Naming conventions, only letters
+		// Container names must start or end with a letter or number, and can contain only letters, numbers, and the dash (-) character.
+		// https://docs.microsoft.com/en-us/rest/api/storageservices/naming-and-referencing-containers--blobs--and-metadata.
+		$container_name = strtolower( preg_replace( '/[^a-zA-Z0-9-]/', '-', $domain ) );
 
-              $containerName = $this->getContainerName();
+		return $container_name;
+	}
 
-            try {
-                $blobClient->getContainerProperties($containerName);
-            } catch(ServiceException $e) {
-                $createContainerOptions = new CreateContainerOptions();
-                $createContainerOptions->setPublicAccess(PublicAccessType::BLOBS_ONLY);
+	/**
+	 * Creates the client proxy to Azure Blob Storage.
+	 *
+	 * @return BlobRestProxy
+	 */
+	protected function get_blob_client(): BlobRestProxy {
+		if ( false === self::$blob_client ) {
+			$blob_client = BlobRestProxy::createBlobService( DEKODE_NINJAFORMS_AZURE_CONNECTION_STRING );
 
-                // $createContainerOptions->addMetaData("key1", "value1");
+			$container_name = $this->get_container_name();
 
-                $blobClient->createContainer($containerName, $createContainerOptions);
-            }
+			try {
+				$blob_client->getContainerProperties( $container_name );
+			} catch ( ServiceException $e ) {
+				$create_container_options = new CreateContainerOptions();
+				$create_container_options->setPublicAccess( PublicAccessType::BLOBS_ONLY );
 
-            self::$blobClient = $blobClient;
-        }
+				$blob_client->createContainer( $container_name, $create_container_options );
+			}
 
-        return self::$blobClient;
-    }
+			self::$blob_client = $blob_client;
+		}
 
-    public function getBlobUrl($blobName)
-    {
-        $blobClient = $this->getBlobClient();
-        $containerName = $this->getContainerName();
+		return self::$blob_client;
+	}
 
-        $sourceBlobPath = $blobClient->getBlobUrl(
-            $containerName,
-            $blobName
-        );
-        return $sourceBlobPath;
+	/**
+	 * Returns full url to file.
+	 *
+	 * @param string $blob_name Name of blob in Azure Blob Storage.
+	 * @return string
+	 */
+	public function get_blob_url( string $blob_name ): string {
+		$blob_client    = $this->get_blob_client();
+		$container_name = $this->get_container_name();
 
-        // $listBlobsOptions = new ListBlobsOptions();
-        // $listBlobsOptions->setPrefix($blobName);
-        // $blob_list = $blobClient->listBlobs($containerName, $listBlobsOptions);
-        // $blobs = $blob_list->getBlobs();
+		$source_blob_path = $blob_client->getBlobUrl(
+			$container_name,
+			$blob_name
+		);
+		return $source_blob_path;
+	}
 
-        // $blobUrl = false;
-        // foreach($blobs as $blob)
-        // {
-        //     if($blob->getName() === $blobName) {
-        //         $blobUrl = $blob->getUrl();
-        //     }
-        // }
+	/**
+	 * Checks that blog exists in Azure Blob Storage.
+	 *
+	 * @param string $blob_name Name of blob in Azure Blob Storage.
+	 * @return bool
+	 */
+	public function exists_file( string $blob_name ): bool {
+		$blob_client    = $this->get_blob_client();
+		$container_name = $this->get_container_name();
 
-        // return $blobUrl;
-    }
+		$blob = false;
 
-    public function existsFile($blobName)
-    {
-        $blobClient = $this->getBlobClient();
-        $containerName = $this->getContainerName();
+		try {
+			$blob = $blob_client->getBlob( $container_name, $blob_name );
+		} catch ( ServiceException $e ) {} // phpcs:ignore
 
-        $blob = false;
+		return $blob ? true : false;
+	}
 
-        try {
-            $blob = $blobClient->getBlob($containerName, $blobName);
-        } catch(ServiceException $e) {
+	/**
+	 * Rename file in Azure Blob Storage.
+	 *
+	 * @param string $old_name Current name of blob in Azure Blob Storage.
+	 * @param string $new_name New name of blob in Azure Blob Storage.
+	 * @return void
+	 */
+	public function rename_file( string $old_name, string $new_name ): void {
+		$blob_client    = $this->get_blob_client();
+		$container_name = $this->get_container_name();
 
-        }
+		$blob_client->copyBlob( $container_name, $new_name, $container_name, $old_name );
+		$blob_client->deleteBlob( $container_name, $old_name );
+	}
 
+	/**
+	 * Removes file in Azure Blob Storage.
+	 *
+	 * @param string $blob_name Name of blob in Azure Blob Storage.
+	 * @return void
+	 */
+	public function delete_file( string $blob_name ): void {
+		$blob_client    = $this->get_blob_client();
+		$container_name = $this->get_container_name();
+		$blob_client->deleteBlob( $container_name, $blob_name );
+	}
 
-        return $blob ? true : false;
-    }
+	/**
+	 * Generates name which includes date, blog_id and site name.
+	 *
+	 * @param string $file_name File name.
+	 * @param string $folder Folder name.
+	 * @return string
+	 */
+	public function generate_name( string $file_name, string $folder = 'temp' ): string {
+		$container_name = $this->get_container_name();
+		$blog_id        = get_current_blog_id();
 
+		// Sanitize the filename for encoding.
+		$file_name = sanitize_file_name( basename( $file_name ) );
 
-    public function renameFile($oldName, $newName)
-    {
-        $blobClient = $this->getBlobClient();
-        $containerName = $this->getContainerName();
+		$file_name = wp_hash( $container_name . $file_name . wp_rand( 1, 10000 ) ) . '-' . $file_name;
 
-        $blobClient->copyBlob($containerName, $newName, $containerName, $oldName);
-        $blobClient->deleteBlob($containerName, $oldName);
-    }
+		$file_name_parts = [ $blog_id, $folder, $file_name ];
+		$blob_name       = join( '/', $file_name_parts );
 
+		return $blob_name;
+	}
 
-    public function deleteFile($blobName)
-    {
-        $blobClient = $this->getBlobClient();
-        $containerName = $this->getContainerName();
-        $blobClient->deleteBlob($containerName, $blobName);
-    }
+	/**
+	 * Process and upload a file to Azure Storage.
+	 *
+	 * @param string $file_name File name to upload.
+	 * @param string $content Content to upload.
+	 * @return array
+	 * @throws \Exception Throws if it's not saved.
+	 */
+	public function upload_file( string $file_name, string $content ): array {
+		$blob_client    = $this->get_blob_client();
+		$container_name = $this->get_container_name();
 
-    public function generateName($fileName, $folder = 'temp')
-    {
-        $containerName = $this->getContainerName();
-        $blogId = get_current_blog_id();
+		$new_blob_name  = $this->generate_name( $file_name, join( '/', [ \gmdate( 'Y' ), \gmdate( 'm' ) ] ) );
+		$temp_blob_name = $this->generate_name( $file_name, 'temp' );
 
-        // Sanitize the filename for encoding
-        $fileName   = sanitize_file_name(basename($fileName));
+		$file_type    = wp_check_filetype( $file_name );
+		$content_type = 'plain/text';
 
-        $fileName = wp_hash($containerName . $fileName . wp_rand(1, 10000)) . '-' . $fileName;
+		if ( $file_type && isset( $file_type['type'] ) && $file_type['type'] ) {
+			$content_type = $file_type['type'];
+		}
 
-        $fileNameParts = [$blogId, $folder, $fileName];
-        $blobName = join('/', $fileNameParts);
+		$blob_options = new CreateBlockBlobOptions();
+		$blob_options->setContentType( $content_type );
+		$blob = $blob_client->createBlockBlob( $container_name, $temp_blob_name, $content, $blob_options );
 
-        return $blobName;
-    }
+		if ( ! $blob ) {
+			throw new \Exception( 'File not saved' );
+		}
 
-    public function uploadFile($fileName, $content)
-    {
-        $blobClient = $this->getBlobClient();
-        $containerName = $this->getContainerName();
+		$blob_url = $this->get_blob_url( $temp_blob_name );
 
-        $newBlobName = $this->generateName($fileName, join('/', [date('Y'), date('m')]));
-        $tempBlobName = $this->generateName($fileName, 'temp');
-
-        $fileType = wp_check_filetype($fileName);
-        $contentType = 'plain/text';
-
-        if($fileType && isset($fileType['type']) && $fileType['type'] ) {
-            $contentType = $fileType['type'];
-        }
-
-        $blobOptions = new CreateBlockBlobOptions();
-        $blobOptions->setContentType($contentType);
-        $blob = $blobClient->createBlockBlob($containerName, $tempBlobName, $content, $blobOptions);
-
-        if(!$blob) {
-            throw new \Exception('File not saved');
-        }
-
-        $blobUrl = $this->getBlobUrl($tempBlobName);
-
-        // var_export([$blobUrl, $fileName, $containerName, $blob]);
-
-        return [
-        'url' => $blobUrl,
-        'tempBlobName' => $tempBlobName,
-        'newBlobName' => $newBlobName,
-        ];
-    }
+		return [
+			'url'          => $blob_url,
+			'tempBlobName' => $temp_blob_name,
+			'newBlobName'  => $new_blob_name,
+		];
+	}
 }
 
 Controller::$instance = new Controller();

@@ -4,16 +4,17 @@ declare( strict_types=1 );
 
 namespace Dekode\NinjaForms\Azure;
 
-use NF_FU_AJAX_Controllers_Uploads;
-
 /**
  *
  * @package Dekode\NinjaForms\Azure
  */
-class Ajax_Controllers_Uploads extends NF_FU_AJAX_Controllers_Uploads
+class Ajax_Controllers_Uploads extends \NF_FU_AJAX_Controllers_Uploads
 {
     protected function _process()
     {
+		\WP_Filesystem();
+		global $wp_filesystem;
+
         foreach ( $this->_data['files'] as $key => $file ) {
 
             $file_name = $this->get_filename_from_chunk();
@@ -34,10 +35,11 @@ class Ajax_Controllers_Uploads extends NF_FU_AJAX_Controllers_Uploads
 
 
             try {
-                $result = Controller::$instance->uploadFile($file['name'], fopen($file['tmp_name'], 'r'));
+				$content = $wp_filesystem->get_contents($file['tmp_name']);
+                $result = Controller::$instance->upload_file($file['name'], $content);
 
             } catch(\Exception $e) {
-                Controller::$instance->errorLog($e->getMessage());
+                Controller::$instance->error_log($e->getMessage());
                 unset($this->_data['files'][ $key ]);
                 $this->_errors[] = __('Unable to move uploaded temp file', 'ninja-forms-uploads');
 
@@ -60,6 +62,6 @@ class Ajax_Controllers_Uploads extends NF_FU_AJAX_Controllers_Uploads
      */
     public function delete_temporary_file( $tempBlobName )
     {
-        Controller::$instance->deleteFile($tempBlobName);
+        Controller::$instance->delete_file($tempBlobName);
     }
 }
