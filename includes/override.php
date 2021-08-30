@@ -9,8 +9,6 @@ declare( strict_types=1 );
 
 namespace Dekode\NinjaForms\Azure;
 
-use NF_FU_File_Uploads;
-
 add_action(
 	'ninja_forms_loaded', function () {
 		// Remove all actions which was registered by
@@ -30,7 +28,7 @@ add_action(
 
 add_filter(
 	'ninja_forms_register_fields', function ( array $fields ): array {
-		$fields[ NF_FU_File_Uploads::TYPE ] = new Fields_Upload();
+		$fields[ \NF_FU_File_Uploads::TYPE ] = new Fields_Upload();
 
 		return $fields;
 	}, 1000
