@@ -23,8 +23,7 @@ require_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/vendor/autoload.php';
 require_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/class-bootstrap.php';
 
 if ( ( new Bootstrap() )->check() ) {
+	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/service/class-nf-fu-external-services-azure-service.php';
 	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/class-controller.php';
-	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/class-fields-upload.php';
-	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/class-ajax-controllers-uploads.php';
 	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/override.php';
 }

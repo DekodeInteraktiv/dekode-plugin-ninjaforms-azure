@@ -1,6 +1,6 @@
 <?php
 /**
- * Loads hooks which help t
+ * Loads hooks which connects plugin
  *
  * @package dekode
  */
@@ -9,27 +9,15 @@ declare( strict_types=1 );
 
 namespace Dekode\NinjaForms\Azure;
 
-add_action(
-	'ninja_forms_loaded', function () {
-		// Remove all actions which was registered by
-		// original NF_FU_AJAX_Controllers_Uploads->init().
+add_filter( 'ninja_forms_uploads_external_service', __NAMESPACE__ . '\dekode_ninja_forms_uploads_external_service_azure', 1, 1 );
 
-		remove_all_actions( 'wp_ajax_nf_fu_upload' );
-		remove_all_actions( 'wp_ajax_nopriv_nf_fu_upload' );
-		remove_all_actions( 'wp_ajax_nf_fu_get_new_nonce' );
-		remove_all_actions( 'wp_ajax_nopriv_nf_fu_get_new_nonce' );
-		remove_all_actions( 'nf_fu_delete_temporary_file' );
-
-		$ajax_upload = new Ajax_Controllers_Uploads();
-		$ajax_upload->init();
-
-	}
-);
-
-add_filter(
-	'ninja_forms_register_fields', function ( array $fields ): array {
-		$fields[ \NF_FU_File_Uploads::TYPE ] = new Fields_Upload();
-
-		return $fields;
-	}, 1000
-);
+/**
+ * Registers Azure service
+ *
+ * @param array $services List of already registered services.
+ * @return array
+ */
+function dekode_ninja_forms_uploads_external_service_azure( array $services ): array {
+	$services[ DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/service/class-nf-fu-external-services-azure-service.php' ] = 'azure';
+	return $services;
+}

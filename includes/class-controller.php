@@ -14,6 +14,7 @@ use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Blob\Models\CreateBlockBlobOptions;
 use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
 use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
+use NF_FU_External_Services_Azure_Service;
 
 /**
  * Controller to process all requests to work with Azure Storage
@@ -22,12 +23,22 @@ use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
  */
 class Controller {
 	/**
-	 * Singleton variable
+	 * Stores service instance of Ninja Forms Upload class
 	 *
-	 * @var self
+	 * @var \NF_FU_External_Services_Azure_Service
 	 */
-	public static $instance = null;
+	private $service;
 
+	/**
+	 * Creates instance of controller
+	 *
+	 * @param \NF_FU_External_Services_Azure_Service $service Ninja Forms Upload service class.
+	 * @return void
+	 */
+	public function __construct( \NF_FU_External_Services_Azure_Service $service ) {
+		$this->service = $service;
+		$this->service->load_settings();
+	}
 	/**
 	 * Official library API class instance
 	 *
@@ -64,6 +75,34 @@ class Controller {
 
 		return $container_name;
 	}
+
+	/**
+	 * Builds connection string.
+	 *
+	 * @return string
+	 */
+	public function build_connection_string(): string {
+		$settings = $this->service->settings;
+
+		$endpoint            = isset( $settings['azure_blob_service_endpoint'] ) ? $settings['azure_blob_service_endpoint'] : '';
+		$connection_string   = [];
+		$connection_string[] = 'AccountName=' . $settings['azure_account_name'];
+		$connection_string[] = 'AccountKey=' . $settings['azure_account_key'];
+		$connection_string[] = 'DefaultEndpointsProtocol=' . strpos( $endpoint, 'https://' ) ? 'https' : 'http';
+		$connection_string[] = 'BlobEndpoint=' . $endpoint;
+
+		return join( ';', $connection_string );
+	}
+
+	// /**
+	// * Checks connection to Azure Blob Storage.
+	// *
+	// * @return bool
+	// */
+	// public function check_connection(): bool {
+	// return false;
+	// }
+
 
 	/**
 	 * Creates the client proxy to Azure Blob Storage.
@@ -180,16 +219,19 @@ class Controller {
 	 * Process and upload a file to Azure Storage.
 	 *
 	 * @param string $file_name File name to upload.
-	 * @param string $content Content to upload.
+	 * @param string $source_file_name Content file name to upload.
 	 * @return array
 	 * @throws \Exception Throws if it's not saved.
 	 */
-	public function upload_file( string $file_name, string $content ): array {
+	public function upload_file( string $file_name, string $source_file_name ): array {
+		\WP_Filesystem();
+		global $wp_filesystem;
+		$content = $wp_filesystem->get_contents( $source_file_name );
+
 		$blob_client    = $this->get_blob_client();
 		$container_name = $this->get_container_name();
 
-		$new_blob_name  = $this->generate_name( $file_name, join( '/', [ \gmdate( 'Y' ), \gmdate( 'm' ) ] ) );
-		$temp_blob_name = $this->generate_name( $file_name, 'temp' );
+		$new_blob_name = $this->generate_name( $file_name, join( '/', [ \gmdate( 'Y' ), \gmdate( 'm' ) ] ) );
 
 		$file_type    = wp_check_filetype( $file_name );
 		$content_type = 'plain/text';
@@ -200,20 +242,17 @@ class Controller {
 
 		$blob_options = new CreateBlockBlobOptions();
 		$blob_options->setContentType( $content_type );
-		$blob = $blob_client->createBlockBlob( $container_name, $temp_blob_name, $content, $blob_options );
+		$blob = $blob_client->createBlockBlob( $container_name, $new_blob_name, $content, $blob_options );
 
 		if ( ! $blob ) {
 			throw new \Exception( 'File not saved' );
 		}
 
-		$blob_url = $this->get_blob_url( $temp_blob_name );
+		$blob_url = $this->get_blob_url( $new_blob_name );
 
 		return [
-			'url'          => $blob_url,
-			'tempBlobName' => $temp_blob_name,
-			'newBlobName'  => $new_blob_name,
+			'url'      => $blob_url,
+			'blobName' => $new_blob_name,
 		];
 	}
 }
-
-Controller::$instance = new Controller();

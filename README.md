@@ -6,16 +6,17 @@
 
 ## How to use
 
-Define constant with connection string:
+* Define connection setting (https://site.com/wp/wp-admin/admin.php?page=ninja-forms-uploads&tab=external)
+* Switch off 'SAVE TO SERVER' setting on File Upload field.
+* Add 'External File Upload' action to form and enable uploading to 'MICROSOFT AZURE'
 
-```
-define('DEKODE_NINJAFORMS_AZURE_CONNECTION_STRING', '');
-```
 
 ## Development
 
-```
-define('DEKODE_NINJAFORMS_AZURE_CONNECTION_STRING', 'AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==22;DefaultEndpointsProtocol=http;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;');
-```
+Install NodeJS and run `npm install` and `npm run azure` to launch development server.
 
+Use local settings:
 
+Account Name: `devstoreaccount1`
+Account Key: `Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==22`
+Blob Service Endpoint: `http://127.0.0.1:10000/devstoreaccount1`

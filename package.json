@@ -7,12 +7,9 @@
 		"yarn": "Please use npm"
 	},
 	"dependencies": {
-
-	},
-	"devDependencies": {
-
+		"azurite": "^3.14.0"
 	},
 	"scripts": {
-
+		"azurite": "azurite --silent --location ./azurite --debug ./azurite/debug.log"
 	}
 }
