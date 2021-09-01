@@ -62,7 +62,7 @@ class NF_FU_External_Services_Azure_Service extends \NF_FU_External_Abstracts_Se
 		$settings = parent::load_settings();
 
 		foreach ( $settings as $key => $value ) {
-			if ( defined( $key ) ) {
+			if ( defined( $key ) && empty( $value ) ) {
 				$settings[ $key ] = constant( $key );
 			}
 		}

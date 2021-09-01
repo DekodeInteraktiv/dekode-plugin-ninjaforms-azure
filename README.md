@@ -18,7 +18,7 @@ define( 'MICROSOFT_AZURE_ACCOUNT_KEY', '' );
 define( 'MICROSOFT_AZURE_CONTAINER', '' );
 ```
 
-The constants have priority over settings.
+The settings have priority over constants.
 
 ## Development
 
