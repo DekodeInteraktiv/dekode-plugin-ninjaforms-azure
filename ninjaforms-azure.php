@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ninja Forms - File Uploads to Azure
  * Plugin URI:      https://dekode.no
- * Description:
+ * Description:     Add support for offloading Ninja Forms Uploads to the Microsoft Azure cloud.
  * Author:          Dekode
  * Author URI:      https://dekode.no
  * Text Domain:     dekode-ninjaforms-azure

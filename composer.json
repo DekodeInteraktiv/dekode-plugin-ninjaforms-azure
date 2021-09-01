@@ -1,21 +1,11 @@
 {
-	"name": "dekode/ninjaforms-azure",
-	"description": "Dekode WordPress boilerplate with modern development tools, easier configuration, and an improved folder structure",
+	"name": "dekode/ninjaforms-uploads-azure",
+	"description": "Add support for offloading Ninja Forms Uploads to the Microsoft Azure cloud.",
 	"type": "wordpress-plugin",
 	"version": "1.0.0",
 	"license": "GPL-3.0-or-later",
 	"prefer-stable": true,
 	"minimum-stability": "dev",
-	"repositories": {
-		"wpackagist": {
-			"type": "composer",
-			"url": "https://wpackagist.org"
-		},
-		"dekode-packages": {
-			"type": "composer",
-			"url": "https://packages.dekodes.no"
-		}
-	},
 	"require": {
 		"php": ">=7.2",
 		"composer/installers": "~1.11.0",

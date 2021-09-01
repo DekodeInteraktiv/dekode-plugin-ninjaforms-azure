@@ -1,9 +1,5 @@
 # Ninja Forms File Uploads to Azure
 
-## Made by
-
- List the people who have been extensively involved in creating this plugin
-
 ## How to use
 
 * Define connection setting (https://site.com/wp/wp-admin/admin.php?page=ninja-forms-uploads&tab=external)
