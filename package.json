@@ -10,6 +10,7 @@
 		"azurite": "^3.14.0"
 	},
 	"scripts": {
+		"postinstall": "mkdir ./azurite",
 		"azurite": "azurite --silent --location ./azurite --debug ./azurite/debug.log"
 	}
 }
