@@ -106,8 +106,6 @@ class Controller {
 	 * @return string
 	 */
 	public function build_connection_string(): string {
-		$settings = $this->service->settings;
-
 		$endpoint            = $this->get_setting( 'MICROSOFT_AZURE_CONTAINER' );
 		$connection_string   = [];
 		$connection_string[] = 'AccountName=' . $this->get_setting( 'MICROSOFT_AZURE_ACCOUNT_NAME' );
