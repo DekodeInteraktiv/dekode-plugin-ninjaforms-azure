@@ -18,7 +18,9 @@ namespace Dekode\NinjaForms\Azure;
 define( 'DEKODE_NINJAFORMS_AZURE_VERSION', '1.0.0' );
 define( 'DEKODE_NINJAFORMS_AZURE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
-require_once __DIR__ . '/vendor/autoload.php';
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
 add_action( 'plugins_loaded', function() {
 	// Check that te NinjaForms File Upload plugin is loaded before we try extending it.
