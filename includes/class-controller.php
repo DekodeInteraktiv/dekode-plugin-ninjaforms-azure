@@ -77,6 +77,30 @@ class Controller {
 	}
 
 	/**
+	 * Fetch a setting value
+	 *
+	 * This will allow for default values to be declared with constants, with overrides declared
+	 * on a per-site basis if needed via the settings screen.
+	 *
+	 * @param string $setting The name of the setting to return.
+	 *
+	 * @return string
+	 */
+	public function get_setting( string $setting ) : string {
+		$setting_value = '';
+
+		if ( defined( $setting ) ) {
+			$setting_value = constant( $setting );
+		}
+
+		if ( isset( $this->service->settings[ $setting ] ) ) {
+			$setting_value = $this->service->settings[ $setting ];
+		}
+
+		return $setting_value;
+	}
+
+	/**
 	 * Builds connection string.
 	 *
 	 * @return string
@@ -84,10 +108,10 @@ class Controller {
 	public function build_connection_string(): string {
 		$settings = $this->service->settings;
 
-		$endpoint            = isset( $settings['azure_blob_service_endpoint'] ) ? $settings['azure_blob_service_endpoint'] : '';
+		$endpoint            = $this->get_setting( 'MICROSOFT_AZURE_CONTAINER' );
 		$connection_string   = [];
-		$connection_string[] = 'AccountName=' . $settings['azure_account_name'];
-		$connection_string[] = 'AccountKey=' . $settings['azure_account_key'];
+		$connection_string[] = 'AccountName=' . $this->get_setting( 'MICROSOFT_AZURE_ACCOUNT_NAME' );
+		$connection_string[] = 'AccountKey=' . $this->get_setting( 'MICROSOFT_AZURE_ACCOUNT_KEY' );
 		$connection_string[] = 'DefaultEndpointsProtocol=' . strpos( $endpoint, 'https://' ) ? 'https' : 'http';
 		$connection_string[] = 'BlobEndpoint=' . $endpoint;
 
@@ -111,7 +135,7 @@ class Controller {
 	 */
 	protected function get_blob_client(): BlobRestProxy {
 		if ( false === self::$blob_client ) {
-			$blob_client = BlobRestProxy::createBlobService( DEKODE_NINJAFORMS_AZURE_CONNECTION_STRING );
+			$blob_client = BlobRestProxy::createBlobService( $this->build_connection_string() );
 
 			$container_name = $this->get_container_name();
 
