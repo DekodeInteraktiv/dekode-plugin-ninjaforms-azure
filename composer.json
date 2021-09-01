@@ -2,7 +2,7 @@
 	"name": "dekode/ninjaforms-uploads-azure",
 	"description": "Add support for offloading Ninja Forms Uploads to the Microsoft Azure cloud.",
 	"type": "wordpress-plugin",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"license": "GPL-3.0-or-later",
 	"prefer-stable": true,
 	"minimum-stability": "dev",
