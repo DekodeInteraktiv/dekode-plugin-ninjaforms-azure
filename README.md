@@ -17,6 +17,6 @@ Install NodeJS and run `npm install` and `npm run azure` to launch development s
 
 Use local settings:
 
-Account Name: `devstoreaccount1`
-Account Key: `Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==22`
-Blob Service Endpoint: `http://127.0.0.1:10000/devstoreaccount1`
+- Account Name: `devstoreaccount1`
+- Account Key: `Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==`
+- Blob Service Endpoint: `http://127.0.0.1:10000/devstoreaccount1`
