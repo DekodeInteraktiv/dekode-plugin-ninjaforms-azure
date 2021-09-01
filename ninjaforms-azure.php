@@ -18,12 +18,17 @@ namespace Dekode\NinjaForms\Azure;
 define( 'DEKODE_NINJAFORMS_AZURE_VERSION', '1.0.0' );
 define( 'DEKODE_NINJAFORMS_AZURE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
-require_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
-require_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/class-bootstrap.php';
+require_once __DIR__ . '/includes/class-bootstrap.php';
 
-if ( ( new Bootstrap() )->check() ) {
-	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/service/class-nf-fu-external-services-azure-service.php';
-	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/class-controller.php';
-	include_once DEKODE_NINJAFORMS_AZURE_DIR_PATH . '/includes/override.php';
-}
+add_action( 'plugins_loaded', function() {
+	// Check that te NinjaForms File Upload plugin is loaded before we try extending it.
+	if ( ! class_exists( '\NF_FU_External_Abstracts_Service' ) ) {
+		return;
+	}
+
+	include_once __DIR__ . '/includes/service/class-nf-fu-external-services-azure-service.php';
+	include_once __DIR__ . '/includes/class-controller.php';
+	include_once __DIR__ . '/includes/override.php';
+} );
