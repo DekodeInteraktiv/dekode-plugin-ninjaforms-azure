@@ -51,6 +51,29 @@ class NF_FU_External_Services_Azure_Service extends \NF_FU_External_Abstracts_Se
 	}
 
 	/**
+	 * Fetch a settings values
+	 *
+	 * This will allow for default values to be declared with constants, with overrides declared
+	 * on a per-site basis if needed via the settings screen.
+	 *
+	 * @return array
+	 */
+	public function load_settings() : array {
+		$settings = parent::load_settings();
+
+		foreach ( $settings as $key => $value ) {
+			if ( defined( $key ) ) {
+				$settings[ $key ] = constant( $key );
+			}
+		}
+
+		$this->settings = $settings;
+
+		return $settings;
+	}
+
+
+	/**
 	 * Is the service connected?
 	 *
 	 * @param null|array $settings Settings from Ninja Forms Settings page.
@@ -77,7 +100,7 @@ class NF_FU_External_Services_Azure_Service extends \NF_FU_External_Abstracts_Se
 	 * @return string
 	 */
 	protected function get_path_setting(): string {
-		return 'azure_blob_service_endpoint';
+		return 'MICROSOFT_AZURE_CONTAINER';
 	}
 
 	/**

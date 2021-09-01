@@ -77,40 +77,18 @@ class Controller {
 	}
 
 	/**
-	 * Fetch a setting value
-	 *
-	 * This will allow for default values to be declared with constants, with overrides declared
-	 * on a per-site basis if needed via the settings screen.
-	 *
-	 * @param string $setting The name of the setting to return.
-	 *
-	 * @return string
-	 */
-	public function get_setting( string $setting ) : string {
-		$setting_value = '';
-
-		if ( defined( $setting ) ) {
-			$setting_value = constant( $setting );
-		}
-
-		if ( isset( $this->service->settings[ $setting ] ) ) {
-			$setting_value = $this->service->settings[ $setting ];
-		}
-
-		return $setting_value;
-	}
-
-	/**
 	 * Builds connection string.
 	 *
 	 * @return string
 	 */
 	public function build_connection_string(): string {
-		$endpoint            = $this->get_setting( 'MICROSOFT_AZURE_CONTAINER' );
+		$settings = $this->service->settings;
+
+		$endpoint            = $settings['MICROSOFT_AZURE_CONTAINER'];
 		$connection_string   = [];
-		$connection_string[] = 'AccountName=' . $this->get_setting( 'MICROSOFT_AZURE_ACCOUNT_NAME' );
-		$connection_string[] = 'AccountKey=' . $this->get_setting( 'MICROSOFT_AZURE_ACCOUNT_KEY' );
-		$connection_string[] = 'DefaultEndpointsProtocol=' . strpos( $endpoint, 'https://' ) ? 'https' : 'http';
+		$connection_string[] = 'AccountName=' . $settings['MICROSOFT_AZURE_ACCOUNT_NAME'];
+		$connection_string[] = 'AccountKey=' . $settings['MICROSOFT_AZURE_ACCOUNT_KEY'];
+		$connection_string[] = 'DefaultEndpointsProtocol=' . ( strpos( $endpoint, 'https://' ) === 0 ? 'https' : 'http' );
 		$connection_string[] = 'BlobEndpoint=' . $endpoint;
 
 		return join( ';', $connection_string );

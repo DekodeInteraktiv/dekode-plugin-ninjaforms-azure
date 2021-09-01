@@ -20,8 +20,6 @@ define( 'DEKODE_NINJAFORMS_AZURE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-require_once __DIR__ . '/includes/class-bootstrap.php';
-
 add_action( 'plugins_loaded', function() {
 	// Check that te NinjaForms File Upload plugin is loaded before we try extending it.
 	if ( ! class_exists( '\NF_FU_External_Abstracts_Service' ) ) {
@@ -31,4 +29,4 @@ add_action( 'plugins_loaded', function() {
 	include_once __DIR__ . '/includes/service/class-nf-fu-external-services-azure-service.php';
 	include_once __DIR__ . '/includes/class-controller.php';
 	include_once __DIR__ . '/includes/override.php';
-} );
+}, 9 ); // It works with priority less than 10.

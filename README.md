@@ -10,6 +10,15 @@
 * Switch off 'SAVE TO SERVER' setting on File Upload field.
 * Add 'External File Upload' action to form and enable uploading to 'MICROSOFT AZURE'
 
+You can also define constants:
+
+```
+define( 'MICROSOFT_AZURE_ACCOUNT_NAME', '' );
+define( 'MICROSOFT_AZURE_ACCOUNT_KEY', '' );
+define( 'MICROSOFT_AZURE_CONTAINER', '' );
+```
+
+The constants have priority over settings.
 
 ## Development
 
