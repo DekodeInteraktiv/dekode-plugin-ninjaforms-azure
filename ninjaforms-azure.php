@@ -6,7 +6,7 @@
  * Author:          Dekode
  * Author URI:      https://dekode.no
  * Text Domain:     dekode-ninjaforms-azure
- * Version:         1.0.1
+ * Version:         1.0.2
  *
  * @package DekodeNinjaFormsAzure
  */
@@ -15,7 +15,7 @@ declare( strict_types=1 );
 
 namespace Dekode\NinjaForms\Azure;
 
-define( 'DEKODE_NINJAFORMS_AZURE_VERSION', '1.0.0' );
+define( 'DEKODE_NINJAFORMS_AZURE_VERSION', '1.0.2' );
 define( 'DEKODE_NINJAFORMS_AZURE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
