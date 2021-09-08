@@ -84,7 +84,7 @@ class Controller {
 	public function build_connection_string(): string {
 		$settings = $this->service->settings;
 
-		$endpoint            = $settings['MICROSOFT_AZURE_CONTAINER'];
+		$endpoint            = $settings['MICROSOFT_AZURE_CNAME'];
 		$connection_string   = [];
 		$connection_string[] = 'AccountName=' . $settings['MICROSOFT_AZURE_ACCOUNT_NAME'];
 		$connection_string[] = 'AccountKey=' . $settings['MICROSOFT_AZURE_ACCOUNT_KEY'];

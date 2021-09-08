@@ -11,7 +11,7 @@ You can also define constants:
 ```
 define( 'MICROSOFT_AZURE_ACCOUNT_NAME', '' );
 define( 'MICROSOFT_AZURE_ACCOUNT_KEY', '' );
-define( 'MICROSOFT_AZURE_CONTAINER', '' );
+define( 'MICROSOFT_AZURE_CNAME', '' );
 ```
 
 The settings have priority over constants.

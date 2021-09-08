@@ -55,8 +55,8 @@ return apply_filters( 'ninja_forms_uploads_settings_azure', [
 		'display_function' => 'dddd',
 		'label'            => __( 'Account Key', 'dekode-ninjaforms-azure' ),
 	]),
-	'MICROSOFT_AZURE_CONTAINER'    => dekode_ninja_forms_uploads_azure_setting_wrapper([
-		'id'    => 'MICROSOFT_AZURE_CONTAINER',
+	'MICROSOFT_AZURE_CNAME'        => dekode_ninja_forms_uploads_azure_setting_wrapper([
+		'id'    => 'MICROSOFT_AZURE_CNAME',
 		'type'  => 'textbox',
 		'label' => __( 'Blob Service Endpoint', 'dekode-ninjaforms-azure' ),
 		'desc'  => __( 'Service endpoint values in your connection strings must be well-formed URIs, including https:// (recommended) or http://.', 'dekode-ninjaforms-azure' ),

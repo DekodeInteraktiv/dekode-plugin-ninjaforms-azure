@@ -100,7 +100,7 @@ class NF_FU_External_Services_Azure_Service extends \NF_FU_External_Abstracts_Se
 	 * @return string
 	 */
 	protected function get_path_setting(): string {
-		return 'MICROSOFT_AZURE_CONTAINER';
+		return 'MICROSOFT_AZURE_CNAME';
 	}
 
 	/**
