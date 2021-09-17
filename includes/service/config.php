@@ -17,11 +17,12 @@ if ( ! function_exists( 'dekode_ninja_forms_uploads_azure_setting_wrapper' ) ) {
 	function dekode_ninja_forms_uploads_azure_setting_wrapper( array $config ): array {
 		$setting_name = $config['id'];
 
-		if ( ! isset( $config['desc'] ) ) {
-			$config['desc'] = '';
-		} else {
-			$config['desc'] .= '<br/>';
-		}
+		if ( $setting_name && defined( $setting_name ) ) {
+			if ( ! isset( $config['desc'] ) ) {
+				$config['desc'] = '';
+			} else {
+				$config['desc'] .= '<br/>';
+			}
 
 			$config['desc'] .= sprintf(
 				'<strong>%s</strong>',
@@ -34,7 +35,7 @@ if ( ! function_exists( 'dekode_ninja_forms_uploads_azure_setting_wrapper' ) ) {
 					esc_html( constant( $setting_name ) )
 				)
 			);
-
+		}
 		return $config;
 	}
 }
