@@ -17,25 +17,24 @@ if ( ! function_exists( 'dekode_ninja_forms_uploads_azure_setting_wrapper' ) ) {
 	function dekode_ninja_forms_uploads_azure_setting_wrapper( array $config ): array {
 		$setting_name = $config['id'];
 
-		if ( $setting_name && defined( $setting_name ) ) {
-			if ( ! isset( $config['desc'] ) ) {
-				$config['desc'] = '';
-			} else {
-				$config['desc'] .= '<br/>';
-			}
+		if ( ! isset( $config['desc'] ) ) {
+			$config['desc'] = '';
+		} else {
+			$config['desc'] .= '<br/>';
+		}
 
 			$config['desc'] .= sprintf(
 				'<strong>%s</strong>',
 				sprintf(
+					// translators: %s: constant name.
 					__(
-						// translators: %s: constant name.
 						'This value is defined in your websites wp-config.php file with the value `%s`. You may override that value by filling in the field above.',
 						'dekode-ninjaforms-azure'
 					),
 					esc_html( constant( $setting_name ) )
 				)
-           );
-		}
+			);
+
 		return $config;
 	}
 }
