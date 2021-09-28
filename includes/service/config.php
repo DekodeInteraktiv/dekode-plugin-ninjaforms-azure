@@ -27,14 +27,14 @@ if ( ! function_exists( 'dekode_ninja_forms_uploads_azure_setting_wrapper' ) ) {
 			$config['desc'] .= sprintf(
 				'<strong>%s</strong>',
 				sprintf(
+					// translators: %s: constant name.
 					__(
-						// translators: %s: constant name.
 						'This value is defined in your websites wp-config.php file with the value `%s`. You may override that value by filling in the field above.',
 						'dekode-ninjaforms-azure'
 					),
 					esc_html( constant( $setting_name ) )
 				)
-           );
+			);
 		}
 		return $config;
 	}
