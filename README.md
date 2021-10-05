@@ -14,7 +14,16 @@ define( 'MICROSOFT_AZURE_ACCOUNT_KEY', '' );
 define( 'MICROSOFT_AZURE_CNAME', '' );
 ```
 
-The settings have priority over constants.
+The respective settings have priority over constants in this situation.
+
+For more controlled environments, you may also use the following constant to automatically force all use the
+external Azure storage service when creating forms:
+
+```
+define( 'MICROSOFT_AZURE_FORCE_EXTERNAL_UPLOAD', true );
+```
+
+This constant may not be overwritten by individual settings on your site or sites.
 
 ## Development
 

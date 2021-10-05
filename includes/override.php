@@ -30,6 +30,11 @@ function dekode_ninja_forms_uploads_external_service_azure( array $services ): a
  * @return array
  */
 function dekode_ninja_forms_get_fields( array $fields, int $form_id ): array {
+	// Only enact total overrides if the appropriate constant is set.
+	if ( ! defined( 'MICROSOFT_AZURE_FORCE_EXTERNAL_UPLOAD' ) || ! MICROSOFT_AZURE_FORCE_EXTERNAL_UPLOAD ) {
+		return $fields;
+	}
+
 	foreach ( $fields as $field ) {
 		if ( 'file_upload' === $field->get_setting( 'type' ) ) {
 
@@ -52,6 +57,11 @@ add_filter( 'ninja_forms_get_fields', __NAMESPACE__ . '\\dekode_ninja_forms_get_
  * @return array
  */
 function dekode_ninja_forms_submission_actions( array $actions, array $form_cache, array $form_data ):array {
+	// Only enact total overrides if the appropriate constant is set.
+	if ( ! defined( 'MICROSOFT_AZURE_FORCE_EXTERNAL_UPLOAD' ) || ! MICROSOFT_AZURE_FORCE_EXTERNAL_UPLOAD ) {
+		return $actions;
+	}
+
 	$fields = $form_cache['fields'];
 
 	$settings = [
